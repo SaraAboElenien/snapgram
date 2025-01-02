@@ -1,0 +1,242 @@
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { UserContext } from '@/Context/UserContext';
+import * as yup from 'yup';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from 'react-hot-toast'; 
+import { useDropzone } from 'react-dropzone';
+
+const API_BASE_URL = "http://localhost:3000/api/v1/auth/post";
+
+const postSchema = yup.object({
+  description: yup
+    .string()
+    .required("Description is required")
+    .max(500, "Description must be under 500 characters"),
+  location: yup.string().optional(),
+  tags: yup.string().optional(),
+});
+
+export default function PostForm({ post, action }) {
+  const navigate = useNavigate();
+  const { userToken } = useContext(UserContext);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageError, setImageError] = useState("");
+  const [previewUrl, setPreviewUrl] = useState(null);
+
+  useEffect(() => {
+    if (post?.image?.secure_url) {
+      setPreviewUrl(post.image.secure_url); 
+    }
+  }, [post]);
+
+  const form = useForm({
+    resolver: yupResolver(postSchema),
+    defaultValues: {
+      description: post?.description || "",
+      location: post?.location || "",
+      tags: post?.tags?.join(", ") || "",
+    },
+  });
+
+  const onDrop = useCallback((acceptedFiles) => {
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+      if (file.type !== "image/png") {
+        setImageError("Only PNG images are allowed");
+        setSelectedImage(null);
+        setPreviewUrl(null);
+      } else {
+        setImageError("");
+        setSelectedImage(file);
+        setPreviewUrl(URL.createObjectURL(file));
+      }
+    }
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'image/png': ['.png'],
+    },
+    maxFiles: 1
+  });
+
+  const handleSubmit = async (data) => {
+    if (!selectedImage && !post?.image?.secure_url) {
+      setImageError("Please select an image");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const formData = new FormData();
+      formData.append("description", data.description);
+      if (data.location) formData.append("location", data.location);
+      if (data.tags) formData.append("tags", data.tags);
+      if (selectedImage) formData.append("postImage", selectedImage);
+
+      const url =
+        action === "Update" && post
+          ? `${API_BASE_URL}/${post._id}`
+          : `${API_BASE_URL}/create-post`;
+
+      const response = await fetch(url, {
+        method: action === "Update" ? "PUT" : "POST",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+        body: formData,
+      });
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to process post");
+      }
+
+      toast.success(`Post ${action === "Update" ? "updated" : "created"} successfully!`);  
+      navigate("/");
+
+    } catch (error) {
+      toast.error(error.message || "An error occurred while processing the post");  
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="w-full max-w-3xl mx-auto p-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea 
+                    {...field} 
+                    placeholder="Write your post description..." 
+                    className="min-h-[120px] bg-dark-3 border-none"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormItem>
+            <FormLabel>Image</FormLabel>
+            <div
+              {...getRootProps()}
+              className={`flex flex-center flex-col bg-dark-3 rounded-xl cursor-pointer 
+                ${isDragActive ? ' bg-primary-500' : 'border-gray-300'}
+                ${previewUrl ? 'bg-dark-3' : 'bg-dark-3'}`}
+            >
+              <input {...getInputProps()} />
+              
+              {previewUrl ? (
+                <div className="flex flex-col justify-center w-full p-5 lg:p-10">
+                  <img
+                    src={previewUrl} 
+                    alt="Preview"
+                    className="file_uploader-img"
+                  />
+                  <p className="text-sm text-gray-500 text-center mt-2">
+                    Click or drag to replace image
+                  </p>
+                </div>
+              ) : (
+                <div className="file_uploader-box">
+                  <img
+                    src={"/assets/images/file-upload.svg"}
+                    width={96}
+                    height={77}
+                    alt="file upload"
+                  />
+                  <p className="base-medium text-light-2 mb-2 mt-6">
+                    Drop your image here
+                  </p>
+                  <p className="text-sm text-gray-500 mb-4">
+                    SVG, PNG, JPG
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="shad-button_dark_4 border-none"
+                  >
+                    Select from computer
+                  </Button>
+                </div>
+              )}
+            </div>
+            {imageError && (
+              <p className="text-sm text-red-500 mt-1">{imageError}</p>
+            )}
+          </FormItem>
+
+          <FormField
+            control={form.control}
+            name="location"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Location</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Add location " className="bg-dark-3 border-none" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tags</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Add tags (comma separated)" className="bg-dark-3 border-none"/>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex justify-end gap-4 text-black">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              disabled={isSubmitting || (!post?.image?.secure_url && !selectedImage)}
+              className="bg-primary-500 hover:bg-primary-600 text-white"
+            >
+              {isSubmitting ? "Submitting..." : `${action} Post`}
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
+  );
+}
