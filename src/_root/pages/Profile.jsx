@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams, useLocation, Link } from "react-router-dom";
-import { UserContext } from "@/context/UserContext";
+import { UserContext } from "@/Context/UserContext";
 import { Button } from "@/components/ui/button";
 import GridPostList from "@/components/Shared/GridPostList";
 import Loader from "@/components/Shared/Loader";

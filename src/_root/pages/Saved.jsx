@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import Loader from '@/components/Shared/Loader';
-import { UserContext } from '@/context/UserContext';
+import { UserContext } from '@/Context/UserContext';
 import GridPostList from '@/components/Shared/GridPostList';
 import { toast } from 'react-hot-toast';
 import api from '@/api/axios';

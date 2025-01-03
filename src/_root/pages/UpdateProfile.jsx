@@ -8,10 +8,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import ProfileUploader from "@/components/Shared/ProfileUploader";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { UserContext } from "@/context/UserContext";
 import { toast } from "react-hot-toast";
 import api from "@/api/axios";
-
+import {UserContext } from "@/Context/UserContext";
 
 const schema = yup.object().shape({
   firstName: yup.string().required("First Name is required"),
