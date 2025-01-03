@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import PostForm from "@/components/forms/PostForm";
+import PostForm from "@/components/Forms/PostForm";
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "@/Context/UserContext";
 import Loader from "@/components/Shared/Loader";
