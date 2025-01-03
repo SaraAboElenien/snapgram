@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { UserContext } from '@/Context/UserContext';
 import Comments from './Comments';
 import toast from 'react-hot-toast';
+import api from '@/api/axios';
+
 
 const PostStats = ({ post, userId }) => {
   const location = useLocation();
@@ -17,8 +18,8 @@ const PostStats = ({ post, userId }) => {
   useEffect(() => {
     const fetchSaveStatusAndCommentCount = async () => {
       try {
-        const savedResponse = await axios.get(
-          'http://localhost:3000/api/v1/auth/post/saved-posts',
+        const savedResponse = await api.get(
+          '/api/v1/auth/post/saved-posts',
           {
             headers: {
               Authorization: `Bearer ${userToken}`,
@@ -32,8 +33,8 @@ const PostStats = ({ post, userId }) => {
           setIsSaved(savedPostIds.includes(post._id));
         }
 
-        const commentResponse = await axios.get(
-          `http://localhost:3000/api/v1/auth/post/${post._id}/comment`,
+        const commentResponse = await api.get(
+          `/api/v1/auth/post/${post._id}/comment`,
           {
             headers: { Authorization: `Bearer ${userToken}` },
           }
@@ -52,8 +53,8 @@ const PostStats = ({ post, userId }) => {
     const isLiked = likes.includes(userId);
 
     try {
-      await axios.put(
-        `http://localhost:3000/api/v1/auth/post/${post._id}/like`,
+      await api.put(
+        `/api/v1/auth/post/${post._id}/like`,
         {},
         {
           headers: {
@@ -74,8 +75,8 @@ const PostStats = ({ post, userId }) => {
 
     try {
       if (isSaved) {
-        await axios.delete(
-          `http://localhost:3000/api/v1/auth/post/${post._id}/save`,
+        await api.delete(
+          `/api/v1/auth/post/${post._id}/save`,
           {
             headers: {
               Authorization: `Bearer ${userToken}`,
@@ -85,8 +86,8 @@ const PostStats = ({ post, userId }) => {
         setIsSaved(false);
         toast.success('Post unsaved.');
       } else {
-        await axios.put(
-          `http://localhost:3000/api/v1/auth/post/${post._id}/save`,
+        await api.put(
+          `/api/v1/auth/post/${post._id}/save`,
           {},
           {
             headers: {

@@ -1,38 +1,31 @@
-import wallpaper from '../../public/assets/images/wallpaper.svg'
-import people from '../../public/assets/images/people.svg'
-import bookmark from '../../public/assets/images/bookmark.svg'
-import gallery from '../../public/assets/images/gallery-add.svg'
-import Home from '../../public/assets/images/Home.svg'
-import Alert from '../../public/assets/images/appointment.png'
-
 export const sidebarLinks = [
     {
-      imgURL: Home,
+      imgURL: "/assets/images/Home.svg",
       route: "/",
       label: "Home",
     },
     {
-      imgURL: wallpaper,
+      imgURL: "/assets/images/wallpaper.svg",
       route: "/explore",
       label: "Explore",
     },
     {
-      imgURL: people,
+      imgURL: "/assets/images/people.svg",
       route: "/all-users",
       label: "People",
     },
     {
-      imgURL: bookmark,
+      imgURL: "/assets/images/bookmark.svg",
       route: "/saved",
       label: "Saved",
     },
     {
-      imgURL: gallery,
+      imgURL: "/assets/images/gallery-add.svg",
       route: "/create-post",
       label: "Create Post",
     },
     {
-      imgURL: Alert,
+      imgURL: "/assets/images/appointment.png",
       route: "/notification",
       label: "Notifications",
     },
@@ -41,22 +34,22 @@ export const sidebarLinks = [
   
   export const bottombarLinks = [
     {
-      imgURL: Home,
+      imgURL: "/assets/images/Home.svg",
       route: "/",
       label: "Home",
     },
     {
-      imgURL: wallpaper,
+      imgURL: "/assets/images/wallpaper.svg",
       route: "/explore",
       label: "Explore",
     },
     {
-      imgURL: bookmark,
+      imgURL: "/assets/images/bookmark.svg",
       route: "/saved",
       label: "Saved",
     },
     {
-      imgURL: gallery,
+      imgURL:  "/assets/images/gallery-add.svg",
       route: "/create-post",
       label: "Create",
     },

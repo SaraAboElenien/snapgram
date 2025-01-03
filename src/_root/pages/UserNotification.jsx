@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
 import { UserContext } from "@/Context/UserContext";
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import api from "@/api/axios";
+
 
 const Notifications = () => {
   const { userToken } = useContext(UserContext);
@@ -15,8 +16,8 @@ const Notifications = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(
-          "http://localhost:3000/api/v1/auth/notification/",
+        const response = await api.get(
+          "/api/v1/auth/notification/",
           {
             headers: { Authorization: `Bearer ${userToken}` },
           }
@@ -38,8 +39,8 @@ const Notifications = () => {
 
   const markAsRead = async (notificationId) => {
     try {
-      await axios.patch(
-        `http://localhost:3000/api/v1/auth/notification/${notificationId}/read`,
+      await api.patch(
+        `/api/v1/auth/notification/${notificationId}/read`,
         null,
         {
           headers: { Authorization: `Bearer ${userToken}` },

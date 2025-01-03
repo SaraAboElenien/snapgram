@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/api/axios";
 import Loader from '@/components/shared/Loader';
 import UserCard from "@/components/Shared/UserCard";
 import { toast } from "react-hot-toast";
@@ -12,8 +12,8 @@ const AllUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3000/api/v1/auth/user/list"
+        const response = await api.get(
+          "/api/v1/auth/user/list"
         );
         setUsers(response.data.users);
         toast.success("Users loaded successfully!"); 

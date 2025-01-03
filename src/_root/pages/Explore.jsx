@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "axios";
 import { Input } from "@/components/ui/input";
 import GridPostList from "@/components/Shared/GridPostList";
 import Loader from "@/components/Shared/Loader";
 import useDebounce from "@/hooks/useDebounce";
 import { UserContext } from '@/Context/UserContext';
 import { toast } from 'react-hot-toast';
+import api from "@/api/axios";
+
+
 
 const SearchResults = ({ isSearchFetching, searchedPosts }) => {
   if (isSearchFetching) {
@@ -32,7 +34,7 @@ const Explore = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/v1/auth/post/recent-post", {
+      const response = await api.get("/api/v1/auth/post/recent-post", {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
@@ -49,7 +51,7 @@ const Explore = () => {
     if (!searchQuery) return;
     setIsSearchFetching(true);
     try {
-      const response = await axios.get(`http://localhost:3000/api/v1/auth/post/recent-post?search=${searchQuery}`, {
+      const response = await api.get(`/api/v1/auth/post/recent-post?search=${searchQuery}`, {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },

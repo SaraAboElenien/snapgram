@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import Loader from "@/components/Shared/Loader";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,6 +10,8 @@ import ProfileUploader from "@/components/Shared/ProfileUploader";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { UserContext } from "@/context/UserContext";
 import { toast } from "react-hot-toast";
+import api from "@/api/axios";
+
 
 const schema = yup.object().shape({
   firstName: yup.string().required("First Name is required"),
@@ -56,8 +57,8 @@ const UpdateProfile = () => {
         formData.append("profileImage", profileImage[0]);
       }
 
-      const response = await axios.patch(
-        "http://localhost:3000/api/v1/auth/user/updateProfile",
+      const response = await api.patch(
+        "/api/v1/auth/user/updateProfile",
         formData,
         {
           headers: {

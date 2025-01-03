@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
 import Loader from '@/components/Shared/Loader';
 import { UserContext } from '@/context/UserContext';
 import GridPostList from '@/components/Shared/GridPostList';
 import { toast } from 'react-hot-toast';
+import api from '@/api/axios';
+
 
 const Saved = () => {
   const [savedPosts, setSavedPosts] = useState([]);
@@ -13,8 +14,8 @@ const Saved = () => {
   useEffect(() => {
     const fetchSavedPosts = async () => {
       try {
-        const response = await axios.get(
-          'http://localhost:3000/api/v1/auth/post/saved-posts',
+        const response = await api.get(
+          '/api/v1/auth/post/saved-posts',
           {
             headers: {
               Authorization: `Bearer ${userToken}`,

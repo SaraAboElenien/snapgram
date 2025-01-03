@@ -16,8 +16,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Loader from '@/components/Shared/Loader';
 import { useState } from "react";
-import axios from "axios";
 import { toast } from 'react-hot-toast';
+import api from "@/api/axios";
+
+
 
 // Yup Validation Schema
 const SignupValidationSchema = Yup.object().shape({
@@ -52,8 +54,8 @@ const SignupForm = () => {
   const handleSignup = async (user) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        `http://localhost:3000/api/v1/auth/user/signup`,
+      const response = await api.post(
+        `/api/v1/auth/user/signup`,
         user
       );
       const { data } = response;

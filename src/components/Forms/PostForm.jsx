@@ -17,8 +17,8 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'react-hot-toast'; 
 import { useDropzone } from 'react-dropzone';
-
-const API_BASE_URL = "http://localhost:3000/api/v1/auth/post";
+import api from '@/api/axios';
+const API_BASE_URL = "/api/v1/auth/post";
 
 const postSchema = yup.object({
   description: yup
@@ -94,24 +94,20 @@ export default function PostForm({ post, action }) {
           ? `${API_BASE_URL}/${post._id}`
           : `${API_BASE_URL}/create-post`;
 
-      const response = await fetch(url, {
-        method: action === "Update" ? "PUT" : "POST",
+      const response = await api({
+        method: action === "Update" ? "put" : "post",
+        url,
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
-        body: formData,
+        data: formData,
       });
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to process post");
-      }
 
       toast.success(`Post ${action === "Update" ? "updated" : "created"} successfully!`);  
       navigate("/");
 
     } catch (error) {
-      toast.error(error.message || "An error occurred while processing the post");  
+      toast.error(error.response?.data?.message || "An error occurred while processing the post");  
     } finally {
       setIsSubmitting(false);
     }

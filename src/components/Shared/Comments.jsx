@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
 import { UserContext } from "@/Context/UserContext";
 import { Link } from "react-router-dom";
 import { multiFormatDateString } from "@/lib/utils";
 import { toast } from "react-hot-toast";
+import api from '@/api/axios';
+
 
 const Comments = ({ postId }) => {
   const { userToken, userData } = useContext(UserContext);
@@ -15,8 +16,8 @@ const Comments = ({ postId }) => {
 
   const fetchComments = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/v1/auth/post/${postId}/comment`,
+      const response = await api.get(
+        `/api/v1/auth/post/${postId}/comment`,
         {
           headers: { Authorization: `Bearer ${userToken}` },
         }
@@ -36,8 +37,8 @@ const Comments = ({ postId }) => {
     if (newComment.trim() === "") return;
 
     try {
-      const response = await axios.post(
-        `http://localhost:3000/api/v1/auth/post/${postId}/comment/add`,
+      const response = await api.post(
+        `/api/v1/auth/post/${postId}/comment/add`,
         { comment: newComment },
         {
           headers: { Authorization: `Bearer ${userToken}` },
@@ -67,8 +68,8 @@ const Comments = ({ postId }) => {
 
   const handleEditComment = async (commentId) => {
     try {
-      const response = await axios.put(
-        `http://localhost:3000/api/v1/auth/post/${postId}/comment/edit/${commentId}`,
+      const response = await api.put(
+        `/api/v1/auth/post/${postId}/comment/edit/${commentId}`,
         { content: editedCommentText },
         {
           headers: { Authorization: `Bearer ${userToken}` },
@@ -93,8 +94,8 @@ const Comments = ({ postId }) => {
 
   const handleDeleteComment = async (commentId) => {
     try {
-      await axios.delete(
-        `http://localhost:3000/api/v1/auth/post/${postId}/comment/${commentId}`,
+      await api.delete(
+        `/api/v1/auth/post/${postId}/comment/${commentId}`,
         {
           headers: { Authorization: `Bearer ${userToken}` },
         }
@@ -117,8 +118,8 @@ const Comments = ({ postId }) => {
     const isLiked = comment.likes.includes(userData._id);
 
     try {
-      await axios.patch(
-        `http://localhost:3000/api/v1/auth/post/${postId}/comment/${commentId}/like`,
+      await api.patch(
+        `/api/v1/auth/post/${postId}/comment/${commentId}/like`,
         {},
         {
           headers: { Authorization: `Bearer ${userToken}` },

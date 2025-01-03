@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/shared/Loader";
 import { multiFormatDateString } from "@/lib/utils";
@@ -8,6 +7,9 @@ import { UserContext } from "@/Context/UserContext";
 import GridPostList from "@/components/Shared/GridPostList";
 import PostStats from "@/components/Shared/PostStats";
 import { toast } from "react-hot-toast";
+import api from "@/api/axios";
+
+
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -22,8 +24,8 @@ const PostDetails = () => {
   const fetchPost = async () => {
     if (!userToken) return;
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/v1/auth/post/${id}`,
+      const response = await api.get(
+        `/api/v1/auth/post/${id}`,
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
@@ -44,8 +46,8 @@ const PostDetails = () => {
   const fetchUserPosts = async (userId) => {
     if (!userToken || !userId) return;
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/v1/auth/post/user-post/${userId}`,
+      const response = await api.get(
+        `/api/v1/auth/post/user-post/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
@@ -70,7 +72,7 @@ const PostDetails = () => {
 
   const handleDeletePost = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/v1/auth/post/${id}`, {
+      await api.delete(`/api/v1/auth/post/${id}`, {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },

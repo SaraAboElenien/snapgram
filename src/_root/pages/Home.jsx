@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
+import api from '@/api/axios';
 import Loader from '@/components/Shared/Loader';
 import PostCard from '@/components/Shared/PostCard';
 import UserCard from '@/components/Shared/UserCard'; 
@@ -16,8 +16,8 @@ const Home = () => {
   const { userToken } = useContext(UserContext);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3000/api/v1/auth/post/recent-post', {
+    api
+      .get('/api/v1/auth/post/recent-post', {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
@@ -36,8 +36,8 @@ const Home = () => {
         setIsPostLoading(false);
       });
 
-    axios
-      .get('http://localhost:3000/api/v1/auth/user/list', {
+    api
+      .get('/api/v1/auth/user/list', {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },

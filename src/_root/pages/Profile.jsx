@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams, useLocation, Link } from "react-router-dom";
-import axios from "axios";
 import { UserContext } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
 import GridPostList from "@/components/Shared/GridPostList";
 import Loader from "@/components/Shared/Loader";
 import { toast } from "react-hot-toast";
+import api from "@/api/axios";
 
 const StatBlock = ({ value, label }) => (
   <div className="flex-center gap-2">
@@ -30,8 +30,8 @@ const Profile = () => {
     if (id) {
       const fetchUserProfile = async () => {
         try {
-          const response = await axios.get(
-            `http://localhost:3000/api/v1/auth/user/userByID/${id}`,
+          const response = await api.get(
+            `/api/v1/auth/user/userByID/${id}`,
             {
               headers: { Authorization: `Bearer ${userToken}` },
             }
@@ -54,10 +54,10 @@ const Profile = () => {
         setPostsLoading(true);
         try {
           const [userPostsResponse, likedPostsResponse] = await Promise.all([
-            axios.get(`http://localhost:3000/api/v1/auth/post/user-post/${id}`, {
+            api.get(`/api/v1/auth/post/user-post/${id}`, {
               headers: { Authorization: `Bearer ${userToken}` },
             }),
-            axios.get(`http://localhost:3000/api/v1/auth/post/user/${id}/liked`, {
+            api.get(`/api/v1/auth/post/user/${id}/liked`, {
               headers: { Authorization: `Bearer ${userToken}` },
             }),
           ]);

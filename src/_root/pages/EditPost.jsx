@@ -4,7 +4,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "@/Context/UserContext";
 import Loader from "@/components/Shared/Loader";
 import { toast } from "react-hot-toast";
-
+import api from "@/api/axios";
 const EditPost = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
@@ -15,20 +15,15 @@ const EditPost = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/v1/auth/post/${id}`, {
+        const response = await api.get(`/api/v1/auth/post/${id}`, {
           headers: {
             Authorization: `Bearer ${userToken}`,
           },
         });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch post");
-        }
-
-        const data = await response.json();
-        setPost(data.post); 
+        setPost(response.data.post);
       } catch (error) {
-        setError(error.message);
+        setError(error.response?.data?.message || "Failed to fetch post");
         toast.error("Failed to fetch post!");
       } finally {
         setIsLoading(false);

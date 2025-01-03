@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
-import axios from "axios";
 import React, { useContext } from "react";
 import { UserContext } from "@/Context/UserContext";
 import { toast } from "react-hot-toast";
+import api from "@/api/axios";
 
 const UserCard = ({ user }) => {
   const { userToken } = useContext(UserContext);
@@ -14,8 +14,8 @@ const UserCard = ({ user }) => {
       return;
     }
     try {
-      const response = await axios.put(
-        `http://localhost:3000/api/v1/auth/user/${user._id}/follow`,
+      const response = await api.put(
+        `/api/v1/auth/user/${user._id}/follow`,
         { action: "follow" },
         {
           headers: {

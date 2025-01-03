@@ -14,9 +14,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Loader from "@/components/shared/Loader";
-import axios from "axios";
+import api from "@/api/axios";
 import { toast } from 'react-hot-toast';  
+import Loader from "@/components/Shared/Loader";
 
 
 // Yup Validation Schema
@@ -46,8 +46,8 @@ const SigninForm = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axios.post(
-        `http://localhost:3000/api/v1/auth/user/signin`,
+      const response = await api.post(
+        `/api/v1/auth/user/signin`,
         user
       );
       const { data } = response;
