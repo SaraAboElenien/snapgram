@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "@/api/axios";
-import Loader from '@/components/shared/Loader';
+import Loader from '@/components/Shared/Loader';
 import UserCard from "@/components/Shared/UserCard";
 import { toast } from "react-hot-toast";
 
