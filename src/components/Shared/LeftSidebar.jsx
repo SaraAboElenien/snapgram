@@ -2,7 +2,7 @@ import { UserContext } from '@/Context/UserContext';
 import React, { useContext } from 'react';
 import logo11 from '../../../public/assets/images/logo.svg';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import Loader from "@/components/shared/Loader";
+import Loader from "@/components/Shared/Loader";
 import logout from '../../../public/assets/images/logout.svg'
 import { sidebarLinks } from "@/constants";
 import { Button } from "@/components/ui/button";
