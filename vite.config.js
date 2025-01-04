@@ -6,17 +6,18 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
-    }
+      '@': path.resolve(__dirname, './src'),
+    },
   },
   build: {
     outDir: 'dist',
     sourcemap: true,
     commonjsOptions: {
-      include: []
-    }
+      include: /node_modules/,
+      transformMixedEsModules: true,
+    },
   },
   optimizeDeps: {
-    exclude: ['js-big-decimal']
-  }
+    exclude: ['js-big-decimal'],
+  },
 })

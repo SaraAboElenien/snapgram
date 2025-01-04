@@ -1,8 +1,9 @@
-import React, { createContext, useEffect, useState } from 'react'
 import api from '@/api/axios'
+import React, { createContext, useEffect, useState } from 'react';
+
+export const UserContext = createContext(null);
 
 
-export const UserContext = createContext()
 
 const UserContextProvider = ({ children }) => {
   const [userToken, setUserToken] = useState(

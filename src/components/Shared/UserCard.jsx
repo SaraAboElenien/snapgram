@@ -1,10 +1,9 @@
-import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import React, { useContext } from "react";
 import { UserContext } from "@/Context/UserContext";
 import { toast } from "react-hot-toast";
 import api from "@/api/axios";
-
+import { Link } from "react-router-dom";
 const UserCard = ({ user }) => {
   const { userToken } = useContext(UserContext);
 

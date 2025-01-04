@@ -37,7 +37,7 @@ const Topbar = () => {
           {userData && (
             <Link to={`/profile/${userData.id}`} className="flex-center gap-3">
               <img
-              src={userData?.profileImage.secure_url}
+              src={userData?.profileImage?.secure_url}
               alt="profile"
                 className="h-8 w-8 rounded-full"
               />
