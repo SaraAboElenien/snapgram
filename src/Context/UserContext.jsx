@@ -16,9 +16,7 @@ const UserContextProvider = ({ children }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       if (userToken) {
-        console.log('Token used:', userToken) // Log the token
         const { id } = JSON.parse(atob(userToken.split('.')[1]))
-        console.log('ID extracted from token:', id)
         try {
           const response = await api.get(
             `/api/v1/auth/user/userByID/${id}`,
@@ -26,7 +24,6 @@ const UserContextProvider = ({ children }) => {
               headers: { Authorization: `Bearer ${userToken}` }
             }
           )
-          console.log('API response:', response.data)
           setUserData(response.data)
         } catch (err) {
           console.error(

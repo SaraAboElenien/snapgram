@@ -2,7 +2,6 @@ import React from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import UserContextProvider from '@/Context/UserContext.jsx'
 import  { Toaster } from 'react-hot-toast';
-
 import {
   Home,
   Profile,
@@ -20,22 +19,23 @@ import AuthLayout from './_auth/AuthLayout.jsx'
 import RootLayout from './_root/RootLayout.jsx'
 import SignupForm from './_auth/forms/SignupForm.jsx'
 import SigninForm from './_auth/forms/SingninForm.jsx'
+import ProtectedRoute from './components/Shared/protectedRoutes';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
     children: [
-      { index: true, element: <Home /> },
-      { path: 'explore', element: <Explore /> },
-      { path: 'saved', element: <Saved /> },
-      { path: 'all-users', element: <AllUsers /> },
-      { path: 'create-post', element: <CreatePost /> },
-      { path: 'update-post/:id', element: <EditPost /> },
-      { path: 'posts/:id', element: <PostDetails /> },
-      { path: 'profile/:id/*', element: <Profile /> },
-      { path: 'update-profile/:id', element: <UpdateProfile /> },
-      { path: "/notification", element: <UserNotification /> }
+      { index: true, element:<ProtectedRoute><Home /></ProtectedRoute>  },
+      { path: 'explore', element: <ProtectedRoute><Explore /></ProtectedRoute> },
+      { path: 'saved', element:<ProtectedRoute><Saved /></ProtectedRoute>  },
+      { path: 'all-users', element:<ProtectedRoute><AllUsers /></ProtectedRoute>  },
+      { path: 'create-post', element: <ProtectedRoute><CreatePost /></ProtectedRoute> },
+      { path: 'update-post/:id', element: <ProtectedRoute><EditPost /></ProtectedRoute> },
+      { path: 'posts/:id', element: <ProtectedRoute><PostDetails /></ProtectedRoute> },
+      { path: 'profile/:id/*', element: <ProtectedRoute><Profile /></ProtectedRoute> },
+      { path: 'update-profile/:id', element: <ProtectedRoute><UpdateProfile /></ProtectedRoute> },
+      { path: "/notification", element:<ProtectedRoute> <UserNotification /></ProtectedRoute> }
 
     ]
   },
