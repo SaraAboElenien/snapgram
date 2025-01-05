@@ -2,23 +2,35 @@ import { UserContext } from '@/Context/UserContext'
 import React, { useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from "@/components/ui/button";
+import Loader from "@/components/Shared/Loader";
 
 const Topbar = () => {
-  const { userData, setUserToken } = useContext(UserContext)
+  const { userData, loading, setUserToken } = useContext(UserContext)
   const navigate = useNavigate()
 
-   function logOut () {
+  function logOut() {
     localStorage.removeItem('userToken')
     setUserToken(null)
     navigate('/sign-in')
   }
+
+  const isUserDataComplete = () => {
+    return userData && userData._id;
+  };
+
+  const getProfileImage = () => {
+    if (userData?.profileImage?.secure_url) {
+      return userData.profileImage.secure_url;
+    }
+    return "/assets/images/profile-placeholder.svg";
+  };
 
   return (
     <section className="topbar">
       <div className="flex-between py-4 px-5">
         <Link to="/" className="flex gap-3 items-center">
           <img
-            src={"/assets/images/logo.svg"}
+            src="/assets/images/logo.svg"
             alt="logo"
             width={130}
             height={325}
@@ -29,23 +41,33 @@ const Topbar = () => {
           <Button
             variant="ghost"
             className="shad-button_ghost"
-            onClick={() => logOut()}>
-            <img src={"/assets/images/logout.svg"} alt="logout" />
+            onClick={logOut}
+          >
+            <img src="/assets/images/logout.svg" alt="logout" />
           </Button>
           
-          {/* Conditionally render the Link based on userData */}
-          {userData && (
-            <Link to={`/profile/${userData.id}`} className="flex-center gap-3">
-              <img
-              src={userData?.profileImage?.secure_url}
-              alt="profile"
-                className="h-8 w-8 rounded-full"
-              />
+          {loading ? (
+            <div className="h-8 w-8 flex items-center justify-center">
+              <Loader />
+            </div>
+          ) : isUserDataComplete() ? (
+            <Link to={`/profile/${userData._id}`} className="flex-center gap-3">
+              <div className="h-8 w-8 rounded-full overflow-hidden">
+                <img
+                  src={getProfileImage()}
+                  alt="profile"
+                  className="h-full w-full object-cover"
+                  onError={(e) => {
+                    e.target.src = "/assets/images/profile-placeholder.svg";
+                  }}
+                />
+              </div>
             </Link>
-          )}
+          ) : null}
         </div>
       </div>
     </section>
   )
 }
+
 export default Topbar
