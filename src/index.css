@@ -8,7 +8,7 @@
 html, body {
   height: 100%;
   width: 100%;
-  overflow: hidden; 
+  /* overflow: hidden;  */
   margin: 0;
   padding: 0;
 }
@@ -324,7 +324,7 @@ html, body {
 
   /* Left sidebar */
   .leftsidebar {
-    @apply hidden md:flex px-6 py-10 flex-col justify-between min-w-[270px]  bg-dark-2;
+    @apply hidden md:flex px-6 py-10 flex-col justify-between min-w-[270px] bg-dark-2;
   }
 
   .leftsidebar-link {
