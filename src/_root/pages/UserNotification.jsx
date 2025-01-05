@@ -80,9 +80,8 @@ const Notifications = () => {
         {notifications.map((notification) => (
           <div
             key={notification._id}
-            className={`notification-items ${
-              !notification.isRead ? "unread" : ""
-            }`}
+            className={`notification-items ${!notification.isRead ? "unread" : ""
+              }`}
             onClick={() => markAsRead(notification._id)}
           >
             <div className="notification-icon">
@@ -111,19 +110,20 @@ const Notifications = () => {
                 alt={notification.sender.firstName}
                 className="w-10 h-10 lg:w-20 lg:h-20 rounded-full"
               />
-              <div className="flex gap-1 flex-col">
-                <div className="flex gap-1">
-                  <p className="base-medium lg:body-bold text-light-1">
-                    {notification.sender.firstName}{" "}
-                    {notification.sender.lastName}
-                  </p>
-                  <p className="Notification-content">{notification.content}</p>
-                </div>
-                <span className="subtle-semibold lg:small-regular text-light-3">
-                  {new Date(notification.createdAt).toLocaleTimeString()}
-                </span>
-              </div>
             </Link>
+
+            <div className="flex gap-1 flex-col">
+              <div className="flex gap-1">
+                <p className="base-medium lg:body-bold text-light-1">
+                  {notification.sender.firstName}{" "}
+                  {notification.sender.lastName}
+                </p>
+                <p className="Notification-content">{notification.content}</p>
+              </div>
+              <span className="subtle-semibold lg:small-regular text-light-3">
+                {new Date(notification.createdAt).toLocaleTimeString()}
+              </span>
+            </div>
 
             {!notification.isRead && (
               <div className="notification-unread-dot"></div>

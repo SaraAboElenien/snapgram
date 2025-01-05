@@ -284,7 +284,7 @@ html, body {
 }
 
 .unread{
-  @apply bg-primary-500 text-black
+  @apply bg-violet-100 text-black
 }
 
 .Notification-content{
