@@ -53,22 +53,32 @@ const UpdateProfile = () => {
       formData.append("firstName", data.firstName);
       formData.append("lastName", data.lastName);
       formData.append("bio", data.bio || "");
-
+  
       if (profileImage?.[0]) {
         formData.append("profileImage", profileImage[0]);
       }
-
+  
+      // Debug logs
+      console.log('Form Data Content:');
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+  
       const response = await api.patch(
-        "/api/v1/auth/user/updateProfile", 
+        "/api/v1/auth/user/updateProfile",
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${userToken}`,
           },
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            console.log('Upload Progress:', percentCompleted + '%');
+          },
         }
       );
-
+  
       if (response.data?.user) {
         setUserData((prevData) => ({
           ...prevData,
@@ -82,16 +92,22 @@ const UpdateProfile = () => {
         navigate(`/profile/${id}`);
       }
     } catch (error) {
-      console.error("Update profile error:", error);
+      console.error('Profile Update Error:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        url: error.config?.url,
+        method: error.config?.method
+      });
       
       let errorMessage = "Failed to update profile. Please try again.";
       
-      if (error.response?.data?.message) {
+      if (error.response?.status === 500) {
+        errorMessage = `Server error (500): ${error.response?.data?.message || 'Unknown server error'}`;
+      } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.message === "Network Error") {
         errorMessage = "Network error. Please check your connection.";
-      } else if (error.message.includes("Invalid URL")) {
-        errorMessage = "Server configuration error. Please contact support.";
       }
       
       toast.error(errorMessage);
@@ -99,7 +115,6 @@ const UpdateProfile = () => {
       setIsLoading(false);
     }
   };
-
   const handleImageChange = (files) => {
     setProfileImage(files);
     if (files?.[0]) {
