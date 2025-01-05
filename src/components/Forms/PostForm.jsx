@@ -70,7 +70,7 @@ export default function PostForm({ post, action }) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'image/png': ['.png'],
+      'image/png': ['.png', ".jpg", ".jpeg"],
     },
     maxFiles: 1
   });
