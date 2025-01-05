@@ -47,7 +47,7 @@ const SigninForm = () => {
     setError(null);
     try {
       const response = await api.post(
-        `/auth/user/signin`,
+        `/api/v1/auth/user/signin`,
         user
       );
       const { data } = response;
