@@ -12,7 +12,7 @@ const RootLayout = () => {
       <div className="flex flex-1 overflow-hidden">
         <LeftSidebar className="leftsidebar" />
 
-        <section className="flex-1 overflow-auto custom-scrollbar">
+        <section className="flex-1 overflow-auto custom-scrollbar scroll-smooth">
           <Outlet />
         </section>
       </div>
