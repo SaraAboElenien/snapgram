@@ -20,6 +20,9 @@ import { useDropzone } from 'react-dropzone';
 import api from '@/api/axios';
 const API_BASE_URL = "/api/v1/auth/post";
 
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
+const MAX_FILE_SIZE = 5 * 1024 * 1024; 
+
 const postSchema = yup.object({
   description: yup
     .string()
@@ -52,11 +55,24 @@ export default function PostForm({ post, action }) {
     },
   });
 
+  const validateFile = (file) => {
+    if (!file) return "Please select an image";
+    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+      return "Only JPEG, JPG and PNG files are allowed";
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      return "File size must be less than 5MB";
+    }
+    return null;
+  };
+
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
-      if (file.type !== "image/png") {
-        setImageError("Only PNG images are allowed");
+      const error = validateFile(file);
+      
+      if (error) {
+        setImageError(error);
         setSelectedImage(null);
         setPreviewUrl(null);
       } else {
@@ -70,9 +86,11 @@ export default function PostForm({ post, action }) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'image/png': ['.png', ".jpg", ".jpeg"],
+      'image/jpeg': ['.jpeg', '.jpg'],
+      'image/png': ['.png']
     },
-    maxFiles: 1
+    maxFiles: 1,
+    maxSize: MAX_FILE_SIZE
   });
 
   const handleSubmit = async (data) => {
@@ -87,27 +105,31 @@ export default function PostForm({ post, action }) {
       formData.append("description", data.description);
       if (data.location) formData.append("location", data.location);
       if (data.tags) formData.append("tags", data.tags);
+      
       if (selectedImage) formData.append("postImage", selectedImage);
 
-      const url =
-        action === "Update" && post
-          ? `${API_BASE_URL}/${post._id}`
-          : `${API_BASE_URL}/create-post`;
-
-      const response = await api({
+      const config = {
         method: action === "Update" ? "put" : "post",
-        url,
+        url: action === "Update" && post
+          ? `${API_BASE_URL}/${post._id}`
+          : `${API_BASE_URL}/create-post`,
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
         data: formData,
-      });
+      };
+
+      const response = await api(config);
 
       toast.success(`Post ${action === "Update" ? "updated" : "created"} successfully!`);  
       navigate("/");
 
     } catch (error) {
-      toast.error(error.response?.data?.message || "An error occurred while processing the post");  
+      console.error('Post submission error:', error);
+      toast.error(
+        error.response?.data?.message || 
+        "An error occurred while processing the post"
+      );  
     } finally {
       setIsSubmitting(false);
     }
@@ -168,7 +190,7 @@ export default function PostForm({ post, action }) {
                     Drop your image here
                   </p>
                   <p className="text-sm text-gray-500 mb-4">
-                    SVG, PNG, JPG
+                    JPG, JPEG, PNG (max 5MB)
                   </p>
                   <Button
                     type="button"
@@ -193,7 +215,7 @@ export default function PostForm({ post, action }) {
               <FormItem>
                 <FormLabel>Location</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Add location " className="bg-dark-3 border-none" />
+                  <Input {...field} placeholder="Add location" className="bg-dark-3 border-none" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -214,7 +236,7 @@ export default function PostForm({ post, action }) {
             )}
           />
 
-          <div className="flex justify-end gap-4 text-black">
+          <div className="flex justify-end gap-4">
             <Button
               type="button"
               variant="outline"
