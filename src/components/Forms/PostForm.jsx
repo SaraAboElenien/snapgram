@@ -116,8 +116,11 @@ export default function PostForm({ post, action }) {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
+
         data: formData,
       };
+      console.log("User Token:", userToken);
+      console.log("Post Data:", data);
 
       const response = await api(config);
 
