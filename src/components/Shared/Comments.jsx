@@ -5,14 +5,18 @@ import { multiFormatDateString } from "@/lib/utils";
 import { toast } from "react-hot-toast";
 import api from '@/api/axios';
 
-
-const Comments = ({ postId }) => {
+const Comments = ({ postId, onCommentCountChange, initialCommentCount }) => {
   const { userToken, userData } = useContext(UserContext);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editedCommentText, setEditedCommentText] = useState("");
-  const [commentCount, setCommentCount] = useState(0);
+  const [commentCount, setCommentCount] = useState(initialCommentCount);
+
+  const updateCommentCount = (newCount) => {
+    setCommentCount(newCount);
+    onCommentCountChange(newCount);
+  };
 
   const fetchComments = async () => {
     try {
@@ -23,7 +27,7 @@ const Comments = ({ postId }) => {
         }
       );
       setComments(response.data.comments);
-      setCommentCount(response.data.commentCount);
+      updateCommentCount(response.data.commentCount);
     } catch {
       toast.error("Error fetching comments.");
     }
@@ -56,7 +60,7 @@ const Comments = ({ postId }) => {
           }
         };
         setComments([...comments, newCommentWithUser]);
-        setCommentCount(prev => prev + 1);
+        updateCommentCount(commentCount + 1);
         setNewComment("");
         toast.success("Comment added.");
       }
@@ -101,7 +105,7 @@ const Comments = ({ postId }) => {
         }
       );
       setComments(comments.filter((comment) => comment._id !== commentId));
-      setCommentCount(prev => prev - 1);
+      updateCommentCount(commentCount - 1);
       toast.success("Comment deleted.");
     } catch {
       toast.error("Error deleting comment.");

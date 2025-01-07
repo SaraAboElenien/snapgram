@@ -5,7 +5,6 @@ import Comments from './Comments';
 import toast from 'react-hot-toast';
 import api from '@/api/axios';
 
-
 const PostStats = ({ post, userId }) => {
   const location = useLocation();
   const likesList = post.likes || [];
@@ -107,6 +106,10 @@ const PostStats = ({ post, userId }) => {
     setShowComments(!showComments);
   };
 
+  const handleCommentCountUpdate = (newCount) => {
+    setCommentCount(newCount);
+  };
+
   const containerStyles = location.pathname.startsWith('/profile') ? 'w-full' : '';
 
   return (
@@ -155,7 +158,13 @@ const PostStats = ({ post, userId }) => {
       </div>
 
       <div className='mt-4'>
-        {showComments && <Comments postId={post._id} />}
+        {showComments && (
+          <Comments 
+            postId={post._id} 
+            onCommentCountChange={handleCommentCountUpdate}
+            initialCommentCount={commentCount}
+          />
+        )}
       </div>
     </>
   );

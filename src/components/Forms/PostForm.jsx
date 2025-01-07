@@ -245,6 +245,7 @@ export default function PostForm({ post, action }) {
               variant="outline"
               onClick={() => navigate(-1)}
               disabled={isSubmitting}
+              className="text-dark-1 border-dark-1 bg-light-2"
             >
               Cancel
             </Button>
