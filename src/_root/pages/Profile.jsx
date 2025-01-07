@@ -66,7 +66,7 @@ const Profile = () => {
           setLikedPosts(likedPostsResponse.data.likedPosts || []);
         } catch (error) {
           if (error.response?.status === 404) {
-            toast.error("This user hasn't posted anything yet");
+            console.error("This user hasn't posted anything yet");
           } else {
             console.error("Error fetching posts:", error);
           }
