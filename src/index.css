@@ -275,7 +275,7 @@ html, body {
   }
 
   .notification-avatar {
-    @apply flex items-center gap-5;
+    @apply flex items-start gap-5 ;
   }
 
 
