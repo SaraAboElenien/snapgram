@@ -263,11 +263,11 @@ html, body {
     @apply flex flex-col flex-1 items-start gap-10 overflow-scroll py-10 px-5 md:p-14 custom-scrollbar;
   }
 .notifications-list{
-  @apply sm:w-full  gap-5 flex ;
+  @apply sm:w-full
 }
 
   .notification-items {
-    @apply flex flex-between align-middle  w-full gap-5 p-2 border-b border-dark-4/80 relative rounded ;
+    @apply flex flex-between  w-full gap-5 p-2 border-b border-dark-4/80 relative rounded ;
   }
 
   .notification-icon-wrapper {
@@ -275,7 +275,7 @@ html, body {
   }
 
   .notification-avatar {
-    @apply flex  gap-5 flex-grow;
+    @apply flex items-center gap-3 flex-grow;
   }
 
 
