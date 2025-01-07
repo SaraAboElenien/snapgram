@@ -125,9 +125,9 @@ const Notifications = () => {
               </span>
             </div>
     
-            {/* {!notification.isRead && (
+            {!notification.isRead && (
               <div className="notification-unread-dot"></div>
-            )} */}
+            )}
           </div>
         ))}
       </div>
