@@ -80,7 +80,7 @@ const Notifications = () => {
         {notifications.map((notification) => (
           <div
             key={notification._id}
-            className={`notification-items ${!notification.isRead ? "unread" : ""
+            className={`notification-items ${!notification.isRead ? "notification-unread-dot" : ""
               }`}
             onClick={() => markAsRead(notification._id)}
           >
@@ -118,16 +118,16 @@ const Notifications = () => {
                   {notification.sender.firstName}{" "}
                   {notification.sender.lastName}
                 </p>
-                <p className="Notification-content">{notification.content}</p>
+                <p>{notification.content}</p>
               </div>
               <span className="subtle-semibold lg:small-regular text-light-3">
                 {new Date(notification.createdAt).toLocaleTimeString()}
               </span>
             </div>
-
-            {!notification.isRead && (
+    
+            {/* {!notification.isRead && (
               <div className="notification-unread-dot"></div>
-            )}
+            )} */}
           </div>
         ))}
       </div>
