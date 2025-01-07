@@ -80,7 +80,7 @@ const Notifications = () => {
         {notifications.map((notification) => (
           <div
             key={notification._id}
-            className={`notification-items ${!notification.isRead ? "notification-unread-dot" : ""
+            className={`notification-items ${!notification.isRead ? "unread" : ""
               }`}
             onClick={() => markAsRead(notification._id)}
           >
