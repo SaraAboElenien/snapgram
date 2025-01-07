@@ -267,7 +267,7 @@ html, body {
 }
 
   .notification-items {
-    @apply flex flex-between  w-full gap-5 p-2 border-b border-dark-4/80 relative rounded ;
+    @apply flex flex-between align-middle  w-full gap-5 p-2 border-b border-dark-4/80 relative rounded ;
   }
 
   .notification-icon-wrapper {
