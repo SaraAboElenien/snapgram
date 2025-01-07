@@ -263,7 +263,7 @@ html, body {
     @apply flex flex-col flex-1 items-start gap-10 overflow-scroll py-10 px-5 md:p-14 custom-scrollbar;
   }
 .notifications-list{
-  @apply sm:w-full lg:w-8/12 gap-5
+  @apply sm:w-full lg:w-6/12 gap-5
 }
 
   .notification-items {
