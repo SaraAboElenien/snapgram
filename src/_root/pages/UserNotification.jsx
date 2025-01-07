@@ -118,7 +118,7 @@ const Notifications = () => {
                   {notification.sender.firstName}{" "}
                   {notification.sender.lastName}
                 </p>
-                <p>{notification.content}</p>
+                <p className="Notification-content">{notification.content}</p>
               </div>
               <span className="subtle-semibold lg:small-regular text-light-3">
                 {new Date(notification.createdAt).toLocaleTimeString()}
