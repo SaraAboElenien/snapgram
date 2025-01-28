@@ -1,8 +1,8 @@
+import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import React from 'react'
 
 import {
   Form,
@@ -11,25 +11,36 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import Loader from '@/components/Shared/Loader';
-import { useState } from "react";
 import { toast } from 'react-hot-toast';
 import api from "@/api/axios";
 
+// Enhanced password requirements message
+const PASSWORD_REQUIREMENTS = [
+  "At least 8 characters long",
+  "Contains at least one lowercase letter",
+  "Contains at least one uppercase letter",
+  "Contains at least one number",
+  "Contains at least one special character"
+];
 
-
-// Yup Validation Schema
+// Yup Validation Schema with friendly messages
 const SignupValidationSchema = Yup.object().shape({
   firstName: Yup.string().required("First Name is required"),
   lastName: Yup.string().required("Last Name is required"),
   email: Yup.string()
-    .email("Enter a valid email")
+    .email("Please enter a valid email address")
     .required("Email is required"),
   password: Yup.string()
-    .min(8, "Password must be at least 8 characters")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      "Please make sure your password meets all requirements below"
+    )
     .required("Password is required"),
 });
 
@@ -37,8 +48,7 @@ const SignupForm = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
-
+  const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
 
   const form = useForm({
     resolver: yupResolver(SignupValidationSchema),
@@ -54,16 +64,13 @@ const SignupForm = () => {
   const handleSignup = async (user) => {
     setIsLoading(true);
     try {
-      const response = await api.post(
-        `/api/v1/auth/user/signup`,
-        user
-      );
+      const response = await api.post(`/api/v1/auth/user/signup`, user);
       const { data } = response;
   
       if (data?.message === "Congrats! You're registered") {
         setIsLoading(false);
         localStorage.setItem("user", JSON.stringify(data.newUser));
-        toast.success("Registration successful! please check your email to verify your account.");
+        toast.success("Registration successful! Please check your email to verify your account.");
         navigate("/sign-in");
       } else {
         setIsLoading(false);
@@ -74,9 +81,10 @@ const SignupForm = () => {
       toast.error(err?.response?.data?.message || "Something went wrong. Please try again later.");
     }
   };
-      return (
+
+  return (
     <div className="sm:w-420 flex-center flex-col">
-      <img src={"/assets/images/logo.svg"} alt="logo" />
+      <img src="/assets/images/logo.svg" alt="logo" />
       <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12 text-light-2">Create a new account</h2>
       <p className="text-light-3 small-medium md:base-regular mt-2">
         To use Snapgram, please enter your details.
@@ -87,22 +95,20 @@ const SignupForm = () => {
           onSubmit={form.handleSubmit(handleSignup)}
           className="flex flex-col gap-5 w-full mt-4"
         >
-          {/* First Name Field */}
           <FormField
             control={form.control}
             name="firstName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="shad-form_label" >First Name</FormLabel>
+                <FormLabel className="shad-form_label">First Name</FormLabel>
                 <FormControl>
-                  <Input type="text" className='text-black' {...field} />
+                  <Input type="text" className="text-black" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          {/* Last Name Field */}
           <FormField
             control={form.control}
             name="lastName"
@@ -110,14 +116,13 @@ const SignupForm = () => {
               <FormItem>
                 <FormLabel className="shad-form_label">Last Name</FormLabel>
                 <FormControl>
-                  <Input type="text"   className='text-black' {...field} />
+                  <Input type="text" className="text-black" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          {/* Email Field */}
           <FormField
             control={form.control}
             name="email"
@@ -125,14 +130,13 @@ const SignupForm = () => {
               <FormItem>
                 <FormLabel className="shad-form_label">Email</FormLabel>
                 <FormControl>
-                  <Input type="email"  className='text-black'  {...field} />
+                  <Input type="email" className="text-black" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          {/* Password Field */}
           <FormField
             control={form.control}
             name="password"
@@ -140,17 +144,38 @@ const SignupForm = () => {
               <FormItem>
                 <FormLabel className="shad-form_label">Password</FormLabel>
                 <FormControl>
-                  <Input type="password"  className='text-black'  {...field} />
+                  <Input 
+                    type="password" 
+                    className="text-black" 
+                    {...field} 
+                    onFocus={() => setShowPasswordRequirements(true)}
+                  />
                 </FormControl>
                 <FormMessage />
+                {showPasswordRequirements && (
+                  <FormDescription className="mt-2 text-sm">
+                    <div className="bg-gray-100 p-3 rounded-lg">
+                      <p className="font-medium mb-2">Password must include:</p>
+                      <ul className="list-disc pl-5 space-y-1">
+                        {PASSWORD_REQUIREMENTS.map((req, index) => (
+                          <li key={index} className="text-sm text-gray-600">
+                            {req}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </FormDescription>
+                )}
               </FormItem>
             )}
           />
 
-          {/* Error Message */}
-          {error && <p className="text-red text-center">{error}</p>}
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-          {/* Submit Button */}
           <Button type="submit" className="shad-button_primary" disabled={isLoading}>
             {isLoading ? (
               <div className="flex-center gap-2">
@@ -161,8 +186,7 @@ const SignupForm = () => {
             )}
           </Button>
 
-          {/* Login Redirect */}
-          <p className="text-small-regular text-light-2 text-center mt-2  pb-5">
+          <p className="text-small-regular text-light-2 text-center mt-2 pb-5">
             Already have an account?
             <Link
               to="/sign-in"
