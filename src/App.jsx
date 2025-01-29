@@ -1,8 +1,7 @@
 import React from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import UserContextProvider, { UserContext } from '@/Context/UserContext.jsx'
+import UserContextProvider from '@/Context/UserContext.jsx'
 import  { Toaster } from 'react-hot-toast';
-import { useContext, useEffect } from 'react';
 import {
   Home,
   Profile,
@@ -50,14 +49,6 @@ const router = createBrowserRouter([
 ])
 
 const App = () => {
-  const { setUserToken } = useContext(UserContext);
-useEffect(()=> {
-if (localStorage.getItem("userToken") !==null) 
-{
-  setUserToken(localStorage.getItem("userToken"))
-}
-}, [])
-
   return (
     <main className='flex w-screen'>
       <UserContextProvider>
